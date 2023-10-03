@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "VivalandTestTaskCharacter.h"
+
+#include "Projectile.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -34,12 +36,29 @@ AVivalandTestTaskCharacter::AVivalandTestTaskCharacter()
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPoint"));
+	ProjectileSpawnPoint->SetupAttachment(RootComponent);
 	
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
-void AVivalandTestTaskCharacter::Tick(float DeltaSeconds)
+void AVivalandTestTaskCharacter::ServerFire_Implementation()
 {
-    Super::Tick(DeltaSeconds);
+	MulticastFire();
+}
+
+void AVivalandTestTaskCharacter::MulticastFire_Implementation()
+{
+	if(HasAuthority())
+	{
+		if(UWorld* World = GetWorld())
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = this;
+			World->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation(), SpawnParams);
+		}
+	}
 }
