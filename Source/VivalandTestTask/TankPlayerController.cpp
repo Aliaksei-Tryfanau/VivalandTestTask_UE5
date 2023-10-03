@@ -24,8 +24,6 @@ void ATankPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
-
-	PlayerCharacter = Cast<ATankCharacter>(GetPawn());
 }
 
 void ATankPlayerController::SetupInputComponent()
@@ -56,7 +54,7 @@ void ATankPlayerController::OnSetDestinationReleased()
 
 void ATankPlayerController::OnFirePressed()
 {
-	if(PlayerCharacter)
+	if(ATankCharacter* PlayerCharacter = Cast<ATankCharacter>(GetPawn()))
 	{
 		PlayerCharacter->ServerFire();
 	}

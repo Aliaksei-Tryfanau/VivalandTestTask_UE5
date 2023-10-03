@@ -36,9 +36,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY()
-	TObjectPtr<ATankCharacter> PlayerCharacter;
-
 	void OnInputStarted();
 	void OnSetDestinationReleased();
 	void OnFirePressed();

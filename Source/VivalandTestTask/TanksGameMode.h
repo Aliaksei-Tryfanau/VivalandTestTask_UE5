@@ -13,6 +13,8 @@ class ATanksGameMode : public AGameModeBase
 
 public:
 	ATanksGameMode();
+
+	void Respawn(ACharacter* CharacterToRespawn, AController* ControllerToPossess);
 };
 
 

@@ -2,6 +2,11 @@
 
 
 #include "Projectile.h"
+
+#include "TankCharacter.h"
+#include "TankPlayerController.h"
+#include "TankPlayerState.h"
+#include "TanksGameMode.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
@@ -45,11 +50,18 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		return;
 	}
 
-	if (const APawn* FiringPawn = GetInstigator(); FiringPawn && HasAuthority())
+	ACharacter* TankHit = Cast<ACharacter>(OtherActor);
+	AController* OwnerController = GetInstigator()->GetController();
+	if (TankHit && OwnerController)
 	{
-		if (AController* FiringController = FiringPawn->GetController())
+		if(ATankPlayerState* TankPlayerState = OwnerController->GetPlayerState<ATankPlayerState>())
 		{
-			
+			TankPlayerState->AddScore();
+		}
+		
+		if(ATanksGameMode* TanksGameMode = Cast<ATanksGameMode>(GetWorld()->GetAuthGameMode()))
+		{
+			TanksGameMode->Respawn(TankHit, TankHit->GetController());
 		}
 	}
 	
