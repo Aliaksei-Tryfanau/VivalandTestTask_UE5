@@ -15,5 +15,9 @@ class VIVALANDTESTTASK_API ATankPlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
+	ATankPlayerState();
 	void AddScore();
+
+protected:
+	virtual void OnRep_Score() override;
 };

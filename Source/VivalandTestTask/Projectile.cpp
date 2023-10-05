@@ -4,6 +4,7 @@
 #include "Projectile.h"
 
 #include "TankCharacter.h"
+#include "TankHUD.h"
 #include "TankPlayerController.h"
 #include "TankPlayerState.h"
 #include "TanksGameMode.h"
@@ -51,10 +52,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	}
 
 	ACharacter* TankHit = Cast<ACharacter>(OtherActor);
-	AController* OwnerController = GetInstigator()->GetController();
-	if (TankHit && OwnerController)
+	ATankPlayerController* TankPlayerController = Cast<ATankPlayerController>(GetInstigator()->GetController());
+	if (TankHit && TankPlayerController)
 	{
-		if(ATankPlayerState* TankPlayerState = OwnerController->GetPlayerState<ATankPlayerState>())
+		if(ATankPlayerState* TankPlayerState = TankPlayerController->GetPlayerState<ATankPlayerState>())
 		{
 			TankPlayerState->AddScore();
 		}
@@ -66,10 +67,4 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	}
 	
 	Destroy();
-}
-
-void AProjectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
 }

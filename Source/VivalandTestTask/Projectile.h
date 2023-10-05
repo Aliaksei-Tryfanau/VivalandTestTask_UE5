@@ -14,8 +14,6 @@ class VIVALANDTESTTASK_API AProjectile : public AActor
 public:
 	AProjectile();
 
-	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
-
 protected:
 	virtual void BeginPlay() override;
 	
