@@ -4,6 +4,7 @@
 #include "TankPlayerState.h"
 #include "ScoreWidget.h"
 #include "TankHUD.h"
+#include "Kismet/GameplayStatics.h"
 
 ATankPlayerState::ATankPlayerState()
 {
@@ -13,7 +14,7 @@ ATankPlayerState::ATankPlayerState()
 void ATankPlayerState::AddScore()
 {
 	SetScore(GetScore() + 1);
-	if(const APlayerController* Controller = GetPlayerController())
+	if(const APlayerController* Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		if(const ATankHUD* TankHUD = Cast<ATankHUD>(Controller->GetHUD()))
 		{
@@ -25,9 +26,8 @@ void ATankPlayerState::AddScore()
 void ATankPlayerState::OnRep_Score()
 {
 	Super::OnRep_Score();
-
-	auto pawn = GetPawn();
-	if(const APlayerController* Controller = GetPlayerController())
+	
+	if(const APlayerController* Controller = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		if(const ATankHUD* TankHUD = Cast<ATankHUD>(Controller->GetHUD()))
 		{
